@@ -7,7 +7,7 @@
 
 
 # exit if a command fails
-set -e
+set -ex
 
 # check if running as root
 if [[ $EUID -ne 0 || ! -n $SUDO_USER ]]; then
