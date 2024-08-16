@@ -27,7 +27,7 @@ gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
 awesome_session="/usr/share/xsessions/awesome.desktop"
 
 # edit dnf config
-if ! grep 'fastestmirror=true' ; then
+if ! grep 'fastestmirror=true' $dnf ; then
 
     if grep 'fastestmirror=false' $dnf; then
 	sed -i 's/fastestmirror=false/fastestmirror=true/' $dnf
