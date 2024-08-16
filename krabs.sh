@@ -15,9 +15,9 @@ if [[ $EUID -ne 0 || ! -n $SUDO_USER ]]; then
     exit 1
 fi
 
-$user=$SUDO_USER
+$user="$SUDO_USER"
 home="/home/$user"
-$PWD=$home
+$PWD="$home"
 dnf="/etc/dnf/dnf.conf"
 dotfiles="https://github.com/0xKrem/dotfiles.git"
 dotconf="$home/.config"
