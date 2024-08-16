@@ -2,8 +2,13 @@
 - this set of scripts is used to deploy a fully operational linux desktop environnement focused on maximum efficiency and productivity
 - this bootstrap script provide modularity and error handling
 - it is developped to be run many time without side effects
+
 # Running the script
 - use this command from a FRESH AND UPDATED FEDORA machine
+```
+sudo dnf install git -y && git clone https://github.com/0xKrem/KRABS.git $HOME/KRABS && sudo ./$HOME/KRABS/krabs.sh
+```
+
 # Major Components
 ## Awesome
 - the Awesome window manager is a dynamic tiling window manager configured in lua and originally forked from suckless's DWM
