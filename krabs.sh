@@ -85,7 +85,7 @@ if [[ -f "$home/.bash_profile" ]];then
 fi
 
 sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
-sudo -u $user ln -s $dotconf/bash/bash_profile .$home/bash_profile
+sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
 
 # configure theme and fonts
 if [[ ! -d $theme_dir ]]; then

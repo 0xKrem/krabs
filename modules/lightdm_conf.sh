@@ -32,7 +32,7 @@ if [[ $ext != "png" && $ext != "jpg" ]] ;then
 fi
 
 img="$1"
-
+img_name="$(echo $img | sed 's/.*\///')"
 # check lightdm is installed
 if ! which lightdm ; then
     echo "Installing lightdm"
@@ -57,7 +57,7 @@ systemctl set-default graphical.target >/dev/null
 
 # background image
 cp "$img" /usr/share/backgrounds/
-chmod 644 "/usr/share/backgrounds/$img"
+chmod 644 "/usr/share/backgrounds/$img_name"
 
 # config files
 echo "setting up .conf files"
