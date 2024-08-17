@@ -7,6 +7,7 @@ fi
 packages=(
     "@xfce-desktop-environment"
     "vim"
+    "awesome"
     "tmux"
     "picom"
     "htop"
@@ -46,3 +47,5 @@ packages=(
 for pkg in "${packages[@]}"; do
     dnf install $pkg -y 
 done
+
+echo "Packages are successfully installed"

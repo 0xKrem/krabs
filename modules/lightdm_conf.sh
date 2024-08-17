@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ex
 
 # help
 if [[ ! -n "$1" ]]; then
@@ -16,7 +17,7 @@ if [[ $EUID -ne 0 || ! -n $SUDO_USER ]]; then
     echo "Error: Run this script using sudo"
     exit 1
 fi
-$user=$SUDO_USER
+user="$SUDO_USER"
 
 # arg checking
 if [[ ! -f "$1" ]]; then
