@@ -55,7 +55,8 @@ if [[ -n "$(find $dotconf -mindepth 1 -print -quit)" ]]; then
     sudo -u $user mkdir $dotconf
 fi
     # clone
-sudo -u $user git clone $dotfiles $dotconf
+echo "Cloning dotfiles"
+sudo -u $user git clone $dotfiles $dotconf >/dev/null
 
 
 # setup lightdm
@@ -91,7 +92,8 @@ sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
 workdir="/tmp/theme"
 mkdir $workdir
 
-git clone --branch master --depth 1 $gtk_theme $workdir
+echo "Installing theme"
+git clone --branch master --depth 1 $gtk_theme $workdir >/dev/null
 if [[ $? -ne 0 ]]; then
     echo "Error: Can not clone $gtk_theme"
     exit 1

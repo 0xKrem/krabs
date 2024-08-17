@@ -45,7 +45,8 @@ packages=(
 )
 
 for pkg in "${packages[@]}"; do
-    dnf install $pkg -y 
+    echo "Installing $pkg"
+    dnf install $pkg -y >/dev/null
 done
 
 echo "Packages are successfully installed"
