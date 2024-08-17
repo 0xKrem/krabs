@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+# set -ex
 # help
 if [[ ! -n "$1" ]]; then
     echo "This script's purpose is to download and install fonts from a url archive

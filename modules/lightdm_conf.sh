@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+# set -ex
 
 # help
 if [[ ! -n "$1" ]]; then
