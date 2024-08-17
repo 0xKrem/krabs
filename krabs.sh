@@ -1,6 +1,5 @@
 # SCOPE :
 # - only for fedora
-# - only for me
 # - only what i already have
 # - modular and error handling
 # - can be ran multiple time without sideeffects
@@ -10,10 +9,11 @@
 set -ex
 
 # check if running as root
-if [[ $EUID -ne 0 || ! -n $SUDO_USER ]]; then
+if [[ $EUID -ne 0 || -z $SUDO_USER ]]; then
     echo "Error: Run this script using sudo"
     exit 1
 fi
+
 
 user="$SUDO_USER"
 home="/home/$user"
@@ -25,17 +25,10 @@ theme_dir="$home/.local/share/themes"
 lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
 gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
 awesome_session="/usr/share/xsessions/awesome.desktop"
+date=$(date +%Y%m%d-%M%H)
+
 
 # edit dnf config
-if ! grep 'fastestmirror=true' $dnf ; then
-
-    if grep 'fastestmirror=false' $dnf; then
-	sed -i 's/fastestmirror=false/fastestmirror=true/' $dnf
-    else
-	echo "fastestmirror=true" >> $dnf
-    fi
-fi
-
 if ! grep 'max_parallel_downloads=20' $dnf; then
 
     if grep -E 'max_parallel_downloads=[0-9]+$' $dnf; then
@@ -45,19 +38,29 @@ if ! grep 'max_parallel_downloads=20' $dnf; then
     fi
 fi
 
+
 # install packets
 ./KRABS/modules/pkg_installer.sh
 
-# setup dotfiles
-sudo -u $user mkdir $dotconf
-sudo -u $user git clone $dotfiles $dotconf
-if [[ $? -ne 0 ]]; then
-    echo "Error: Can not clone $dotfiles"
-    exit 1
+
+# dotfiles
+    # creating .config if needed
+if [[ ! -d "$dotconf" ]]; then
+    sudo -u $user mkir $dotconf
 fi
+
+    # if not empty, backup
+if [[ -n "$(find $dotconf -mindepth 1 -print -quit)" ]]; then
+    sudo -u $user mv $dotconf "$dotconf-$date"
+    sudo -u $user mkdir $dotconf
+fi
+    # clone
+sudo -u $user git clone $dotfiles $dotconf
+
 
 # setup lightdm
 ./KRABS/modules/lightdm_conf.sh $lockscreen_bg
+
 
 # create awesome session
 if [[ ! -f $awesome_session ]]; then
@@ -69,21 +72,31 @@ if [[ ! -f $awesome_session ]]; then
     Type=Application" > $awesome_session 
 fi
 
+
 # symlinks
-rm -f $home/{.bashrc,.bash_profile}
-sudo -u $user ln -s $dotconf/bash/bashrc .bashrc
-sudo -u $user ln -s $dotconf/bash/bash_profile .bash_profile
+# TODO: create backup function instead
+
+if [[ -f "$home/.bashrc" ]];then
+    sudo -u $user mv $home/.bashrc{,-$date} 
+fi
+
+if [[ -f "$home/.bash_profile" ]];then
+    sudo -u $user mv $home/.bash_profile{,-$date}
+fi
+
+sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
+sudo -u $user ln -s $dotconf/bash/bash_profile .$home/bash_profile
 
 # configure theme and fonts
-sudo -u $user mkdir -p $theme_dir
-sudo -u $user git clone --branch master --depth 1 $gtk_theme $theme_dir/skeuos-gtk
+if [[ ! -d $theme_dir ]]; then
+    sudo -u $user mkdir -p $theme_dir
+fi
+sudo -u $user git clone --branch master --depth 1 $gtk_theme "$theme_dir/gtk-theme-$date"
 
 if [[ $? -ne 0 ]]; then
     echo "Error: Can not clone $gtk_theme"
     exit 1
 fi
-sudo -u $user mv $theme_dir/skeuos-gtk/themes/Skeuos-Blue-Dark $theme_dir
-rm -fr skeuos-gtk/
 
 # install fonts
 chmod 744 font_installer.sh
@@ -100,6 +113,7 @@ firewall-cmd --add-port=22000/tcp --permanent
 # - flatpaks
 # - mozilla user.js
 # - syncthing daemon
-# flatpak overrides
-# mounting my ssd as home
-# btrfs snapper
+# later
+# - flatpak overrides
+# - mounting my ssd as home
+# - btrfs snapper
