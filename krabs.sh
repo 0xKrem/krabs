@@ -99,7 +99,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # install fonts
-sudo -u $user bash $home/KRABS/modules/font_installer.sh
+sudo -u $user bash $home/KRABS/modules/font_installer.sh "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
 
 # firewall
     # syncthing
