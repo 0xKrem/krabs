@@ -21,7 +21,7 @@ PWD="$home"
 dnf="/etc/dnf/dnf.conf"
 dotfiles="https://github.com/0xKrem/dotfiles.git"
 dotconf="$home/.config"
-theme_dir="$home/.local/share/themes"
+theme_dir="/usr/share/themes"
 lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
 gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
 awesome_session="/usr/share/xsessions/awesome.desktop"
@@ -88,15 +88,15 @@ sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
 sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
 
 # configure theme and fonts
-if [[ ! -d $theme_dir ]]; then
-    sudo -u $user mkdir -p $theme_dir
-fi
-sudo -u $user git clone --branch master --depth 1 $gtk_theme "$theme_dir/gtk-theme-$date"
+workdir="/tmp/theme"
+mkdir $workdir
 
+git clone --branch master --depth 1 $gtk_theme $workdir
 if [[ $? -ne 0 ]]; then
     echo "Error: Can not clone $gtk_theme"
     exit 1
 fi
+mv "$workdir/themes/Skeuos-Blue-Dark" "$theme_dir"
 
 # install fonts
 sudo -u $user bash $home/KRABS/modules/font_installer.sh "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
