@@ -5,8 +5,9 @@
 
 # Running the script
 - use this command from a FRESH AND UPDATED FEDORA machine
+
 ```
-sudo dnf install git -y && git clone https://github.com/0xKrem/KRABS.git $HOME/KRABS && sudo ./$HOME/KRABS/krabs.sh
+sudo dnf install git -y && git clone https://github.com/0xKrem/KRABS.git $HOME/KRABS && sudo bash $HOME/KRABS/krabs.sh
 ```
 
 # Major Components

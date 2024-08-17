@@ -108,6 +108,8 @@ sudo -u $user bash $home/KRABS/modules/font_installer.sh "https://github.com/rya
 firewall-cmd --add-port=22000/udp --permanent
 firewall-cmd --add-port=22000/tcp --permanent
 
+reboot
+
 # missing 
 # - better bootstap command using curl
 # - disable SELinux
