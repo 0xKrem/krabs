@@ -46,7 +46,7 @@ fi
 # dotfiles
     # creating .config if needed
 if [[ ! -d "$dotconf" ]]; then
-    sudo -u $user mkir $dotconf
+    sudo -u $user mkdir $dotconf
 fi
 
     # if not empty, backup
@@ -110,6 +110,7 @@ firewall-cmd --add-port=22000/tcp --permanent
 
 # missing 
 # - better bootstap command using curl
+# - disable SELinux
 # - flatpaks
 # - mozilla user.js
 # - syncthing daemon
