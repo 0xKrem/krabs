@@ -34,6 +34,8 @@ fi
 
 img="$1"
 img_name="$(echo $img | sed 's/.*\///')"
+img_path="/usr/share/backgrounds/$img_name"
+
 # check lightdm is installed
 if ! which lightdm ; then
     echo "Installing lightdm"
@@ -72,7 +74,7 @@ echo "[greeter]
 theme-name = Adwaita-dark
 icon-theme-name = ePapirus-Dark
 font-name = Sans 12
-background = $img
+background = $img_path
 clock-format = %H:%M
 indicators = ~host;~spacer;~clock;~spacer;~layout;~separator;~session;~power" > /etc/lightdm/lightdm-gtk-greeter.conf
 
