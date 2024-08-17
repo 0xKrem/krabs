@@ -99,7 +99,6 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # install fonts
-chmod 744 font_installer.sh
 chown krem:krem font_installer.sh
 sudo -u $user ./$home/KRABS/modules/font_installer.sh
 
