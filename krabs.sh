@@ -99,7 +99,6 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # install fonts
-chown krem:krem font_installer.sh
 sudo -u $user ./$home/KRABS/modules/font_installer.sh
 
 # firewall
