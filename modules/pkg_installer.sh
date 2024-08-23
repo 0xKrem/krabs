@@ -42,6 +42,7 @@ packages=(
     "battray"
     "volumeicon"
     "epapirus-icon-theme"
+    "libreoffice"
 )
 
 for pkg in "${packages[@]}"; do
