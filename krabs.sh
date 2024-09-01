@@ -111,14 +111,15 @@ sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
 sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
 
 # configure theme and fonts
+mkdir -p  $workdir/git_theme
 
 echo "Installing theme"
-git clone --branch master --depth 1 $gtk_theme $workdir >/dev/null
+git clone --branch master --depth 1 $gtk_theme $workdir/git_theme >/dev/null
 if [[ $? -ne 0 ]]; then
     echo "Error: Can not clone $gtk_theme"
     exit 1
 fi
-mv "$workdir/themes/Skeuos-Blue-Dark" "$theme_dir"
+mv "$workdir/git_theme/themes/Skeuos-Blue-Dark" "$theme_dir"
 
 # install fonts
 sudo -u $user bash "$workdir/modules/font_installer.sh" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
