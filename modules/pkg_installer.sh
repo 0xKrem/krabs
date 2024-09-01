@@ -43,6 +43,7 @@ packages=(
     "volumeicon"
     "epapirus-icon-theme"
     "libreoffice"
+    "xfce4-genmon-plugin"
 )
 
 for pkg in "${packages[@]}"; do
