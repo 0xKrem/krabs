@@ -41,11 +41,11 @@ modules=(
     "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/font_installer.sh"
 )
 
-mkdir "$workdir/modules"
+mkdir -p "$workdir/modules"
 
 for $module in "${modules[@]}"; do
     name=$(basename $module)
-    curl $module > "$workdir/modules/$name"
+    curl -s $module > "$workdir/modules/$name"
 done
 
 chmod 755 $workdir/modules/*
