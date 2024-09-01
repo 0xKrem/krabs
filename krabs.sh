@@ -16,17 +16,39 @@ fi
 
 
 user="$SUDO_USER"
+
+# main paths
 home="/home/$user"
 PWD="$home"
-dnf="/etc/dnf/dnf.conf"
-dotfiles="https://github.com/0xKrem/dotfiles.git"
 dotconf="$home/.config"
 theme_dir="/usr/share/themes"
-lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
-gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
+
+# other paths
+dnf="/etc/dnf/dnf.conf"
 awesome_session="/usr/share/xsessions/awesome.desktop"
 date=$(date +%Y%m%d-%M%H)
+workdir="/tmp/krabs"
 
+# links
+dotfiles="https://github.com/0xKrem/dotfiles.git"
+lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
+gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
+
+# modules
+modules=(
+    "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/pkg_installer.sh"
+    "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/lightdm_conf.sh"
+    "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/font_installer.sh"
+)
+
+mkdir "$workdir/modules"
+
+for $module in "${modules[@]}"; do
+    name=$(basename $module)
+    curl $module > "$workdir/modules/$name"
+done
+
+chmod 755 $workdir/modules/*
 
 # edit dnf config
 if ! grep 'max_parallel_downloads=20' $dnf; then
@@ -40,7 +62,7 @@ fi
 
 
 # install packets
-./KRABS/modules/pkg_installer.sh
+bash "$workdir/modules/pkg_installer.sh"
 
 
 # dotfiles
@@ -60,7 +82,7 @@ sudo -u $user git clone $dotfiles $dotconf >/dev/null
 
 
 # setup lightdm
-./KRABS/modules/lightdm_conf.sh $lockscreen_bg
+bash "$workdir/modules/lightdm_conf.sh" $lockscreen_bg
 
 
 # create awesome session
@@ -89,8 +111,6 @@ sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
 sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
 
 # configure theme and fonts
-workdir="/tmp/theme"
-mkdir $workdir
 
 echo "Installing theme"
 git clone --branch master --depth 1 $gtk_theme $workdir >/dev/null
@@ -101,7 +121,7 @@ fi
 mv "$workdir/themes/Skeuos-Blue-Dark" "$theme_dir"
 
 # install fonts
-sudo -u $user bash $home/KRABS/modules/font_installer.sh "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
+sudo -u $user bash "$workdir/modules/font_installer.sh" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
 
 # syncthing
 
