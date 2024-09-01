@@ -43,7 +43,7 @@ modules=(
 
 mkdir -p "$workdir/modules"
 
-for $module in "${modules[@]}"; do
+for module in "${modules[@]}"; do
     name=$(basename $module)
     curl -s $module > "$workdir/modules/$name"
 done
