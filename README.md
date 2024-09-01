@@ -7,7 +7,7 @@
 - use this command from a FRESH AND UPDATED FEDORA machine
 
 ```
-sudo dnf install git -y && git clone https://github.com/0xKrem/KRABS.git $HOME/KRABS && sudo bash $HOME/KRABS/krabs.sh
+curl -s https://raw.githubusercontent.com/0xKrem/KRABS/main/krabs.sh | sudo bash
 ```
 
 # Major Components
