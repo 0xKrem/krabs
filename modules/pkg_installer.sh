@@ -69,7 +69,7 @@ flatpaks=(
     "md.obsidian.Obsidian"
     "org.gnome.Evince"
     "org.signal.Signal"
-    "flathub org.gnome.Loupe"
+    "org.gnome.Loupe"
 )
 
 for flatpak in "${flatpaks[@]}" ; do
