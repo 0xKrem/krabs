@@ -4,6 +4,8 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+echo "Installing system packages"
+
 packages=(
     "@xfce-desktop-environment"
     "vim"
@@ -46,9 +48,31 @@ packages=(
     "xfce4-genmon-plugin"
 )
 
-for pkg in "${packages[@]}"; do
-    echo "Installing $pkg"
-    dnf install $pkg -y >/dev/null
-done
+# for pkg in "${packages[@]}"; do
+#     echo "Installing $pkg"
+#     dnf install $pkg -y >/dev/null
+# done
 
-echo "Packages are successfully installed"
+echo "System packages are successfully installed"
+
+# flatpaks
+flatpak_repo="flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
+flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
+
+flatpaks=(
+    "com.bitwarden.desktop"
+    "com.brave.Browser"
+    "com.discordapp.Discord"
+    "com.github.johnfactotum.Foliate"
+    "com.github.wwmm.easyeffects"
+    "com.vscodium.codium"
+    "md.obsidian.Obsidian"
+    "org.gnome.Evince"
+    "org.signal.Signal"
+    "flathub org.gnome.Loupe"
+)
+
+for flatpak in "${flatpaks[@]}" ; do
+    echo "Installing $flatpak"
+    flatpak install flathub --noninteractive $flatpak &>/dev/null
+done
