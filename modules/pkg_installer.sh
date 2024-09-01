@@ -60,7 +60,7 @@ packages=(
 echo "System packages are successfully installed"
 
 # flatpaks
-flatpak_repo="flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
+flatpak_repo="https://dl.flathub.org/repo/flathub.flatpakrepo"
 flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
 
 flatpaks=(
