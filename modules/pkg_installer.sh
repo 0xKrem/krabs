@@ -48,10 +48,14 @@ packages=(
     "xfce4-genmon-plugin"
 )
 
-# for pkg in "${packages[@]}"; do
-#     echo "Installing $pkg"
-#     dnf install $pkg -y >/dev/null
-# done
+ for pkg in "${packages[@]}"; do
+     echo "Installing $pkg"
+     dnf install $pkg -y >/dev/null
+
+     if [[ $? -ne 0 ]];then
+	 echo "Error while trying to install $pkg" >&2
+     fi
+ done
 
 echo "System packages are successfully installed"
 
@@ -75,4 +79,8 @@ flatpaks=(
 for flatpak in "${flatpaks[@]}" ; do
     echo "Installing $flatpak"
     flatpak install flathub --noninteractive $flatpak &>/dev/null
+
+     if [[ $? -ne 0 ]];then
+	 echo "Error while trying to install $flatpak" >&2
+     fi
 done

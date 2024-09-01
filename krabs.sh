@@ -103,12 +103,12 @@ mv "$workdir/themes/Skeuos-Blue-Dark" "$theme_dir"
 # install fonts
 sudo -u $user bash $home/KRABS/modules/font_installer.sh "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
 
-# firewall
-    # syncthing
+# syncthing
+
+# fw
 firewall-cmd --add-port=22000/udp --permanent
 firewall-cmd --add-port=22000/tcp --permanent
 
-reboot
 
 # missing 
 # - better bootstap command using curl
@@ -120,3 +120,5 @@ reboot
 # - flatpak overrides
 # - mounting my ssd as home
 # - btrfs snapper
+
+reboot
