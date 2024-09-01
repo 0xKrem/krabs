@@ -6,6 +6,9 @@ fi
 
 echo "Installing system packages"
 
+# installing DE in parallel
+dnf install @xfce-desktop-environment -y & >/dev/null
+
 packages=(
     "@xfce-desktop-environment"
     "vim"
