@@ -9,6 +9,7 @@ echo "Installing system packages"
 packages=(
     "@xfce-desktop-environment"
     "vim"
+    "git"
     "awesome"
     "tmux"
     "picom"
