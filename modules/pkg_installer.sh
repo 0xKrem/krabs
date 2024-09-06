@@ -75,6 +75,7 @@ flatpaks=(
     "org.gnome.Evince"
     "org.signal.Signal"
     "org.gnome.Loupe"
+    "org.gnome.clocks"
 )
 
 for flatpak in "${flatpaks[@]}" ; do

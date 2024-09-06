@@ -130,6 +130,7 @@ sudo -u $user bash "$workdir/modules/font_installer.sh" "https://github.com/ryan
 firewall-cmd --add-port=22000/udp --permanent
 firewall-cmd --add-port=22000/tcp --permanent
 
+xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 
 # missing 
 # - better bootstap command using curl
