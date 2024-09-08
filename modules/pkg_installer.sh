@@ -39,14 +39,12 @@ packages=(
     "libvirt-client-qemu"
     "libvirt-daemon-qemu"
     "qemu-kvm"
-    "light"
     "network-manager-applet"
     "blueman"
-    "battray"
-    "volumeicon"
     "epapirus-icon-theme"
     "libreoffice"
     "xfce4-genmon-plugin"
+    "distrobox"
 )
 
  for pkg in "${packages[@]}"; do
