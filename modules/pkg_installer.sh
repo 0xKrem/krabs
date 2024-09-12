@@ -34,7 +34,6 @@ packages=(
     "NetworkManager"
     "ripgrep"
     "flameshot"
-    "qbittorrent"
     "virt-manager"
     "libvirt-client-qemu"
     "libvirt-daemon-qemu"
@@ -42,12 +41,11 @@ packages=(
     "network-manager-applet"
     "blueman"
     "epapirus-icon-theme"
-    "libreoffice"
     "xfce4-genmon-plugin"
     "distrobox"
     "podman"
     "telnet"
-    "ark"
+    "ncdu"
 )
 
  for pkg in "${packages[@]}"; do
@@ -77,6 +75,9 @@ flatpaks=(
     "org.signal.Signal"
     "org.gnome.Loupe"
     "org.gnome.clocks"
+    "org.kde.ark"
+    "org.libreoffice.LibreOffice"
+    "org.qbittorrent.qBittorrent"
 )
 
 for flatpak in "${flatpaks[@]}" ; do
