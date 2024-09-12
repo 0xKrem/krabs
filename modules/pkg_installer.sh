@@ -45,6 +45,9 @@ packages=(
     "libreoffice"
     "xfce4-genmon-plugin"
     "distrobox"
+    "podman"
+    "telnet"
+    "ark"
 )
 
  for pkg in "${packages[@]}"; do
