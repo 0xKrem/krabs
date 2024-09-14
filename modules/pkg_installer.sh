@@ -78,6 +78,7 @@ flatpaks=(
     "org.kde.ark"
     "org.libreoffice.LibreOffice"
     "org.qbittorrent.qBittorrent"
+    "com.usebottles.bottles"
 )
 
 for flatpak in "${flatpaks[@]}" ; do
