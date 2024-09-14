@@ -127,8 +127,8 @@ sudo -u $user bash "$workdir/modules/font_installer.sh" "https://github.com/ryan
 # syncthing
 
 # fw
-firewall-cmd --add-port=22000/udp --permanent
-firewall-cmd --add-port=22000/tcp --permanent
+firewall-cmd --add-service=syncthing --permanent
+firewall-cmd --reload
 
 xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 
@@ -138,6 +138,7 @@ xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 # - flatpaks
 # - mozilla user.js
 # - syncthing daemon
+# dnf installonly limit 5
 # later
 # - flatpak overrides
 # - mounting my ssd as home
