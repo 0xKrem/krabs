@@ -46,6 +46,7 @@ packages=(
     "podman"
     "telnet"
     "ncdu"
+    "cargo"
 )
 
  for pkg in "${packages[@]}"; do
@@ -79,13 +80,14 @@ flatpaks=(
     "org.libreoffice.LibreOffice"
     "org.qbittorrent.qBittorrent"
     "com.usebottles.bottles"
+    "org.mozilla.Thunderbird"
 )
 
 for flatpak in "${flatpaks[@]}" ; do
     echo "Installing $flatpak"
     flatpak install flathub --noninteractive $flatpak &>/dev/null
 
-     if [[ $? -ne 0 ]];then
-	 echo "Error while trying to install $flatpak" >&2
-     fi
+    if [[ $? -ne 0 ]];then
+	echo "Error while trying to install $flatpak" >&2
+    fi
 done
