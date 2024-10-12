@@ -1,19 +1,10 @@
-# SCOPE :
-# - only for fedora
-# - only what i already have
-# - modular and error handling
-# - can be ran multiple time without sideeffects
-
-
-# exit if a command fails
- # set -ex
+#!/bin/env bash
 
 # check if running as root
 if [[ $EUID -ne 0 || -z $SUDO_USER ]]; then
     echo "Error: Run this script using sudo"
     exit 1
 fi
-
 
 user="$SUDO_USER"
 
@@ -60,10 +51,8 @@ if ! grep 'max_parallel_downloads=20' $dnf; then
     fi
 fi
 
-
 # install packets
 bash "$workdir/modules/pkg_installer.sh"
-
 
 # dotfiles
     # creating .config if needed
@@ -84,7 +73,6 @@ sudo -u $user git clone $dotfiles $dotconf >/dev/null
 # setup lightdm
 bash "$workdir/modules/lightdm_conf.sh" $lockscreen_bg
 
-
 # create awesome session
 if [[ ! -f $awesome_session ]]; then
     echo "[Desktop Entry]
@@ -95,10 +83,7 @@ if [[ ! -f $awesome_session ]]; then
     Type=Application" > $awesome_session 
 fi
 
-
 # symlinks
-# TODO: create backup function instead
-
 if [[ -f "$home/.bashrc" ]];then
     sudo -u $user mv $home/.bashrc{,-$date} 
 fi
@@ -125,6 +110,7 @@ mv "$workdir/git_theme/themes/Skeuos-Blue-Dark" "$theme_dir"
 sudo -u $user bash "$workdir/modules/font_installer.sh" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
 
 # syncthing
+systemctl --user enable syncthing.service
 
 # fw
 firewall-cmd --add-service=syncthing --permanent
@@ -133,15 +119,9 @@ firewall-cmd --reload
 xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 
 # missing 
-# - better bootstap command using curl
 # - disable SELinux
-# - flatpaks
 # - mozilla user.js
-# - syncthing daemon
 # dnf installonly limit 5
-# later
 # - flatpak overrides
-# - mounting my ssd as home
-# - btrfs snapper
 
 reboot

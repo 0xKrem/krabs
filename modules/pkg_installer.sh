@@ -81,6 +81,8 @@ flatpaks=(
     "org.qbittorrent.qBittorrent"
     "com.usebottles.bottles"
     "org.mozilla.Thunderbird"
+    "org.wireshark.Wireshark"
+    "com.slack.Slack"
 )
 
 for flatpak in "${flatpaks[@]}" ; do
