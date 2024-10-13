@@ -50,7 +50,7 @@ fi
 # check if papirus is installed
 if ! rpm -q 'epapirus-icon-theme' ; then
     echo "Installing  rpm -q 'epapirus-icon-theme' >/dev/null"
-    dnf install lightdm-gtk-greeter -y >/dev/null
+    dnf install epapirus-icon-theme -y >/dev/null
 fi
 
 # configure services
