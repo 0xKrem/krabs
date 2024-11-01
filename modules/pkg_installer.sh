@@ -47,6 +47,7 @@ packages=(
     "telnet"
     "ncdu"
     "cargo"
+    "virt-viewer"
 )
 
  for pkg in "${packages[@]}"; do
@@ -72,7 +73,7 @@ flatpaks=(
     "com.github.wwmm.easyeffects"
     "com.vscodium.codium"
     "md.obsidian.Obsidian"
-    "org.gnome.Evince"
+    "org.gnome.Papers"
     "org.signal.Signal"
     "org.gnome.Loupe"
     "org.gnome.clocks"
@@ -83,6 +84,7 @@ flatpaks=(
     "org.mozilla.Thunderbird"
     "org.wireshark.Wireshark"
     "com.slack.Slack"
+    "org.remmina.Remmina"
 )
 
 for flatpak in "${flatpaks[@]}" ; do
