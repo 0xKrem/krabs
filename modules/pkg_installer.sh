@@ -48,6 +48,7 @@ packages=(
     "ncdu"
     "cargo"
     "virt-viewer"
+    "wireshark"
 )
 
  for pkg in "${packages[@]}"; do
@@ -82,7 +83,6 @@ flatpaks=(
     "org.qbittorrent.qBittorrent"
     "com.usebottles.bottles"
     "org.mozilla.Thunderbird"
-    "org.wireshark.Wireshark"
     "com.slack.Slack"
     "org.remmina.Remmina"
 )

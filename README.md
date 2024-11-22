@@ -3,8 +3,18 @@
 - this bootstrap script provide modularity and error handling
 - it is developped to be run many time without side effects
 
-# Running the script
-- use this command from a FRESH AND UPDATED FEDORA machine
+# How to deploy
+## Getting the ISO
+- Get the iso from the official 'Alternative Download page' [here](https://alt.fedoraproject.org/)
+- Chose 'Network Installer'
+
+## Install the lastest version of Fedora (current = 41)
+- Follow the [official documentation](https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/install/Installing_Using_Anaconda/) for the Anaconda Installer
+- **Careful** : At the software selection step, select the first option
+- Finish the installation. The number of installed packages should be nearly 400 at this point
+
+## Running the script
+- Once you are logged in and you have network connection, run this command
 
 ```
 curl -s https://raw.githubusercontent.com/0xKrem/KRABS/main/krabs.sh | sudo bash
