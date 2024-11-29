@@ -119,9 +119,11 @@ firewall-cmd --reload
 xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 
 # missing 
+# - add user to libvirt qemu groups
 # - disable SELinux
-# - mozilla user.js
-# dnf installonly limit 5
+# - eveng setup
+# - crontab
+# - dnf installonly limit 5
 # - flatpak overrides
 
 reboot

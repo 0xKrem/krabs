@@ -49,6 +49,7 @@ packages=(
     "cargo"
     "virt-viewer"
     "wireshark"
+    "zenity"
 )
 
  for pkg in "${packages[@]}"; do
