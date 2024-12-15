@@ -7,48 +7,59 @@ fi
 echo "Installing system packages"
 
 packages=(
+    # desktop
     "@xfce-desktop-environment"
-    "vim"
-    "git"
     "awesome"
-    "tmux"
     "picom"
-    "htop"
-    "wget"
-    "unzip"
-    "tar"
     "lightdm"
     "lightdm-gtk"
     "rofi"
+
+    # dev
     "neovim"
+    "vim"
+    "git"
+    "tmux"
+    "distrobox"
+    "podman"
+    "cargo"
+
+    # cli utils
+    "htop"
+    "btop"
+    "wget"
+    "unzip"
+    "tar"
+    "ripgrep"
+    "eza"
+
+    # apps
+    "alacritty"
+    "firefox"
     "flatpak"
     "syncthing"
-    "firefox"
-    "default-fonts-core-emoji"
-    "alacritty"
     "vlc"
-    "btop"
     "timeshift"
     "flameshot"
     "thunar"
-    "NetworkManager"
-    "ripgrep"
     "flameshot"
+    "NetworkManager"
+    "network-manager-applet"
+    "blueman"
+    "wireshark"
+
+    # virtu
     "virt-manager"
     "libvirt-client-qemu"
     "libvirt-daemon-qemu"
     "qemu-kvm"
-    "network-manager-applet"
-    "blueman"
+    "virt-viewer"
+
+    # other
+    "default-fonts-core-emoji"
     "epapirus-icon-theme"
     "xfce4-genmon-plugin"
-    "distrobox"
-    "podman"
     "telnet"
-    "ncdu"
-    "cargo"
-    "virt-viewer"
-    "wireshark"
     "zenity"
 )
 
@@ -77,14 +88,10 @@ flatpaks=(
     "md.obsidian.Obsidian"
     "org.gnome.Papers"
     "org.signal.Signal"
-    "org.gnome.Loupe"
-    "org.gnome.clocks"
     "org.kde.ark"
     "org.libreoffice.LibreOffice"
     "org.qbittorrent.qBittorrent"
-    "com.usebottles.bottles"
     "org.mozilla.Thunderbird"
-    "com.slack.Slack"
     "org.remmina.Remmina"
 )
 
