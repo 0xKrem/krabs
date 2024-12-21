@@ -32,6 +32,8 @@ packages=(
     "tar"
     "ripgrep"
     "eza"
+    "bat"
+    "fzf"
 
     # apps
     "alacritty"

@@ -95,6 +95,7 @@ fi
 sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
 sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
 sudo -u $user ln -s $dotconf/bash/bash_aliases $home/.bash_aliases
+sudo -u $user ln -s $dotconf/bash/bash_functions $home/.bash_functions
 
 # configure theme and fonts
 mkdir -p  $workdir/git_theme
