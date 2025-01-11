@@ -23,6 +23,7 @@ packages=(
     "distrobox"
     "podman"
     "cargo"
+	"npm"
 
     # cli utils
     "htop"
@@ -34,6 +35,7 @@ packages=(
     "eza"
     "bat"
     "fzf"
+    "zoxide"
 
     # apps
     "alacritty"
@@ -44,14 +46,14 @@ packages=(
     "timeshift"
     "flameshot"
     "thunar"
-    "flameshot"
     "NetworkManager"
     "network-manager-applet"
     "blueman"
     "wireshark"
 
     # virtu
-    "virt-manager"
+	"cockpit"
+	"cockpit-machines"
     "libvirt-client-qemu"
     "libvirt-daemon-qemu"
     "qemu-kvm"
@@ -86,7 +88,6 @@ flatpaks=(
     "com.discordapp.Discord"
     "com.github.johnfactotum.Foliate"
     "com.github.wwmm.easyeffects"
-    "com.vscodium.codium"
     "md.obsidian.Obsidian"
     "org.gnome.Papers"
     "org.signal.Signal"
