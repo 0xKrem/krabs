@@ -21,15 +21,17 @@ date=$(date +%Y%m%d-%M%H)
 workdir="/tmp/krabs"
 
 # links
-dotfiles="https://github.com/0xKrem/dotfiles.git"
+dotfiles="https://github.com/clementdlg/dotfiles.git"
+scripts="https://github.com/clementdlg/scripts.git"
 lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
 gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
+font="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
 
 # modules
 modules=(
-    "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/pkg_installer.sh"
-    "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/lightdm_conf.sh"
-    "https://raw.githubusercontent.com/0xKrem/KRABS/main/modules/font_installer.sh"
+    "https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/pkg_installer.sh"
+    "https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/lightdm_conf.sh"
+    "https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/font_installer.sh"
 )
 
 mkdir -p "$workdir/modules"
@@ -109,10 +111,11 @@ fi
 mv "$workdir/git_theme/themes/Skeuos-Blue-Dark" "$theme_dir"
 
 # install fonts
-sudo -u $user bash "$workdir/modules/font_installer.sh" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
+sudo -u $user bash "$workdir/modules/font_installer.sh" "$font"
 
 # syncthing
-systemctl --user enable syncthing.service
+systemctl enable cockpit
+sudo -u $user systemctl --user enable syncthing.service
 
 # fw
 firewall-cmd --add-service=syncthing --permanent
@@ -123,9 +126,13 @@ xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 # missing 
 # - add user to libvirt qemu groups
 # - disable SELinux
-# - eveng setup
-# - crontab
+# - crontab (shutdown puter)
 # - dnf installonly limit 5
-# - flatpak overrides
+# - flatpak overrides (signal, discord, brave)
+# - clone script repo
+# - cockpit desktop file and icon
+# - dont just clone dotfiles repo, check every files / folder and copy them to .config while renaming old files when conflict
+# - refactor script with a functions, text files for packages and create wrapper functions for simple tasks
+# - update the bash files placement (create less symlinks)
 
 reboot

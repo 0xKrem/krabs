@@ -50,13 +50,13 @@ packages=(
     "network-manager-applet"
     "blueman"
     "wireshark"
+	"atril"
 
     # virtu
 	"cockpit"
 	"cockpit-machines"
     "libvirt-client-qemu"
     "libvirt-daemon-qemu"
-    "qemu-kvm"
     "virt-viewer"
 
     # other
@@ -89,7 +89,6 @@ flatpaks=(
     "com.github.johnfactotum.Foliate"
     "com.github.wwmm.easyeffects"
     "md.obsidian.Obsidian"
-    "org.gnome.Papers"
     "org.signal.Signal"
     "org.kde.ark"
     "org.libreoffice.LibreOffice"
