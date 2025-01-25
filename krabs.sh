@@ -95,7 +95,7 @@ function importModules() {
 		local filePath="$workdir/modules/$name"
 
 		downloader "$filePath" "$module"
-		[[ $? -ne 0 ]]; return 1
+		[[ $? -ne 0 ]] && return 1
 
 		source "$filePath"
 		if [[ $? -ne 0 ]]; then
