@@ -8,7 +8,7 @@ function main() {
 	fi
 
 	date=$(date +%H%M%S%d)
-	local workdir="/tmp/krabs$date"
+	local workdir="/tmp/krabs-$date"
 
 	# function prerequisits that checks the distro and internet connection
 
@@ -67,11 +67,12 @@ function getPackageLists() {
 		"$baseUrl/flatpaks"
 	)
 
-	mkdir -p "$workdir/packages"
+	local path="$workdir/packages"
+	mkdir -p "$path"
 
 	for list in "${packages[@]}"; do
 		local name=$(basename "$list")
-		local filePath="$workdir/modules/$name"
+		local filePath="$path/$name"
 
 		downloader "$filePath" "$list"
 		[[ $? -ne 0 ]] && return 1
@@ -90,11 +91,12 @@ function importModules() {
 		# "$baseUrl/font_installer.sh"
 	)
 
-	mkdir -p "$workdir/modules"
+	local path="$workdir/modules"
+	mkdir -p "$path"
 
 	for module in "${modules[@]}"; do
 		local name=$(basename "$module")
-		local filePath="$workdir/modules/$name"
+		local filePath="$path/$name"
 
 		downloader "$filePath" "$module"
 		[[ $? -ne 0 ]] && return 1
