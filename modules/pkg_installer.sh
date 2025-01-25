@@ -18,7 +18,7 @@ function sysInstall() {
 	fi
 
 	while IFS= read -r pkg; do
-		if [[ -z "$pgk" || "$pkg" == "#"* ]]; then
+		if [[ -z "$pgk" || "$pkg" =~ ^# ]]; then
 			continue
 		fi
 		echo "Installing $pkg"
@@ -43,7 +43,7 @@ function flatpakInstall() {
 	fi
 
 	while IFS= read -r pkg; do
-		if [[ -z "$pgk" || "$pkg" == "#"* ]]; then
+		if [[ -z "$pgk" || "$pkg" =~ ^# ]]; then
 			continue
 		fi
 		echo "Installing $pkg"
