@@ -18,6 +18,9 @@ function sysInstall() {
 	fi
 
 	while IFS= read -r pkg; do
+		if [[ -z "$pgk" || "$pkg" == "#"* ]]; then
+			continue
+		fi
 		echo "Installing $pkg"
 		# dnf install $pkg -y --quiet
 		if [[ $? -ne 0 ]];then
@@ -32,6 +35,7 @@ function flatpakInstall() {
 	local flatpak_repo="https://dl.flathub.org/repo/flathub.flatpakrepo"
 	# flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
 
+	echo "flatpak install start"
 	local packages="$1"
 	if [[ ! -f "$packages" ]]; then
 		echo "Error: file $packages does not exist"
