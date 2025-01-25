@@ -81,8 +81,6 @@ function getPackageLists() {
 }
 
 function importModules() {
-	local workdir="/tmp/krabs$date"
-
 	local baseUrl="https://raw.githubusercontent.com/clementdlg/KRABS/refs/heads/dev/modules"
 	# modules
 	local modules=(
