@@ -72,7 +72,7 @@ function getPackageLists() {
 		local filePath="$workdir/modules/$name"
 
 		downloader "$filePath" "$list"
-		[[ $? -ne 0 ]]; return 1
+		[[ $? -ne 0 ]] && return 1
 	done
 	return 0
 }
