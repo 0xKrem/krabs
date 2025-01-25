@@ -8,7 +8,7 @@ echo "Installing system packages"
 
 packages=(
     # desktop
-    "@xfce-desktop-environment"
+    "@xfce-desktop"
     "awesome"
     "picom"
     "lightdm"

@@ -130,19 +130,15 @@ xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 # - dnf installonly limit 5
 # - flatpak overrides (signal, discord, brave)
 # - clone script repo
-# - cockpit desktop file and icon
 # - dont just clone dotfiles repo, check every files / folder and copy them to .config while renaming old files when conflict
 # - refactor script with a functions, text files for packages and create wrapper functions for simple tasks
 # - update the bash files placement (create less symlinks)
-# - git clone scripts
 # - 'wk' check if 
 # - run upgrade at the beginning
-# - re-add virt-manager and remove cockpit
-# - remove xfce-appfinder, xfce4-terminal, virtualbox-guest-additions, anaconda-core
+# - remove xfce-appfinder, xfce4-terminal, virtualbox-guest-additions, anaconda-core, hyperv-daemons, transmission
 # - replace vlc by its flatpak
-# - remove flameshot (uses qt)
-# - remove wireshark (uses qt)
-# - remove hyperv-daemons 
+# - replace flameshot (uses qt)
+# - replace wireshark (uses qt)
 # - no virtu, install in distrobox instead
 
 reboot
