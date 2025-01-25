@@ -1,101 +1,52 @@
-# check privileges
-if [[ $EUID -ne 0 ]]; then
-    echo "Error: Run this script with root privileges"
-    exit 1
-fi
+function parallelDownload() {
+	local dnf="/etc/dnf/dnf.conf"
 
-echo "Installing system packages"
+	if ! grep 'max_parallel_downloads=20' $dnf; then
+	  if grep -E 'max_parallel_downloads=[0-9]+$' $dnf; then
+		  sed -i -E 's/max_parallel_downloads=[0-9]+$/max_parallel_downloads=20/' $dnf
+	  else
+		  echo "max_parallel_downloads=20" >> $dnf
+	  fi
+	fi
+}
 
-packages=(
-    # desktop
-    "@xfce-desktop"
-    "awesome"
-    "picom"
-    "lightdm"
-    "lightdm-gtk"
-    "rofi"
+function sysInstall() {
+	local packages="$1"
+	if [[ ! -f "$packages" ]]; then
+		echo "Error: file $packages does not exist"
+		return 1
+	fi
 
-    # dev
-    "neovim"
-    "vim"
-    "git"
-    "tmux"
-    "distrobox"
-    "podman"
-    "cargo"
-	"npm"
+	while IFS= read -r pkg; do
+		echo "Installing $pkg"
+		# dnf install $pkg -y --quiet
+		if [[ $? -ne 0 ]];then
+			echo "Error while trying to install $pkg" >&2
+			return 1
+		fi
+	done < $packages
+}
 
-    # cli utils
-    "htop"
-    "btop"
-    "wget"
-    "unzip"
-    "tar"
-    "ripgrep"
-    "eza"
-    "bat"
-    "fzf"
-    "zoxide"
+function flatpakInstall() {
+	# flatpaks
+	local flatpak_repo="https://dl.flathub.org/repo/flathub.flatpakrepo"
+	# flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
 
-    # apps
-    "alacritty"
-    "firefox"
-    "flatpak"
-    "syncthing"
-    "timeshift"
-    "thunar"
-    "NetworkManager"
-    "network-manager-applet"
-    "blueman"
-	"atril"
+	local packages="$1"
+	if [[ ! -f "$packages" ]]; then
+		echo "Error: file $packages does not exist"
+		return 1
+	fi
 
-    # virtu
-	# "virt-manager"
- #    "libvirt-client-qemu"
- #    "libvirt-daemon-qemu"
- #    "virt-viewer"
+	while IFS= read -r pkg; do
+		echo "Installing $pkg"
+	
+		# installing
+		# flatpak install flathub --noninteractive $flatpak &>/dev/null
 
-    # other
-    "default-fonts-core-emoji"
-    "epapirus-icon-theme"
-    "xfce4-genmon-plugin"
-    "telnet"
-)
-
- for pkg in "${packages[@]}"; do
-     echo "Installing $pkg"
-     dnf install $pkg -y >/dev/null
-
-     if [[ $? -ne 0 ]];then
-	 echo "Error while trying to install $pkg" >&2
-     fi
- done
-
-echo "System packages are successfully installed"
-
-# flatpaks
-flatpak_repo="https://dl.flathub.org/repo/flathub.flatpakrepo"
-flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
-
-flatpaks=(
-    "com.bitwarden.desktop"
-    "com.brave.Browser"
-    "com.discordapp.Discord"
-    "com.github.johnfactotum.Foliate"
-    "com.github.wwmm.easyeffects"
-    "md.obsidian.Obsidian"
-    "org.signal.Signal"
-    "org.kde.ark"
-    "org.libreoffice.LibreOffice"
-    "org.qbittorrent.qBittorrent"
-    "org.remmina.Remmina"
-)
-
-for flatpak in "${flatpaks[@]}" ; do
-    echo "Installing $flatpak"
-    flatpak install flathub --noninteractive $flatpak &>/dev/null
-
-    if [[ $? -ne 0 ]];then
-	echo "Error while trying to install $flatpak" >&2
-    fi
-done
+		if [[ $? -ne 0 ]];then
+			echo "Error while trying to install $pkg" >&2
+			return 1
+		fi
+	done < $packages
+}

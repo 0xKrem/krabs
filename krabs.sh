@@ -1,131 +1,196 @@
 #!/bin/env bash
 
-# check if running as root
-if [[ $EUID -ne 0 || -z $SUDO_USER ]]; then
-    echo "Error: Run this script using sudo"
-    exit 1
-fi
+function main() {
+	# check if running as root
+	if [[ $EUID -ne 0 || -z $SUDO_USER ]]; then
+		echo "Error: Run this script using sudo"
+		exit 1
+	fi
 
-user="$SUDO_USER"
+	date=$(date +%H%M%S%d)
+	local workdir="/tmp/krabs$date"
 
-# main paths
-home="/home/$user"
-PWD="$home"
-dotconf="$home/.config"
-theme_dir="/usr/share/themes"
+	# function prerequisits that checks the distro and internet connection
 
-# other paths
-dnf="/etc/dnf/dnf.conf"
-awesome_session="/usr/share/xsessions/awesome.desktop"
-date=$(date +%Y%m%d-%M%H)
-workdir="/tmp/krabs"
+	importModules
+	if [[ $? -ne 0 ]]; then
+		echo "Error: Cannot import modules"
+		exit 1
+	fi
 
-# links
-dotfiles="https://github.com/clementdlg/dotfiles.git"
-scripts="https://github.com/clementdlg/scripts.git"
-lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
-gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
-font="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
+	getPackageLists
+	if [[ $? -ne 0 ]]; then
+		echo "Error: Cannot get package lists"
+		exit 1
+	fi
+	
 
-# modules
-modules=(
-    "https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/pkg_installer.sh"
-    "https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/lightdm_conf.sh"
-    "https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/font_installer.sh"
-)
+	# install packets
+	parallelDownload
+	sysInstall "$workdir/packages/fedora-xfce"
+	flatpakInstall "$workdir/packages/flatpaks"
 
-mkdir -p "$workdir/modules"
+}
 
-for module in "${modules[@]}"; do
-    name=$(basename "$module")
-    curl -s "$module" > "$workdir/modules/$name"
-done
+function downloader() {
+	if [[ ! -d "$1" ]]; then
+		echo "error: $1 is not a directory"
+		return 1
+	fi
+	local path="$1"
 
-chmod 755 $workdir/modules/*
+	if [[ -z "$2" ]]; then
+		echo "error: $2 is empty"
+		return 1
+	fi
+	local url="$2"
 
-# edit dnf config
-if ! grep 'max_parallel_downloads=20' $dnf; then
+	local response=$(curl -s -o "$path" -w "%{http_code}" "$url")
 
-    if grep -E 'max_parallel_downloads=[0-9]+$' $dnf; then
-	sed -i -E 's/max_parallel_downloads=[0-9]+$/max_parallel_downloads=20/' $dnf
-    else
-	echo "max_parallel_downloads=20" >> $dnf
-    fi
-fi
+	if [[ "$response" == "404" ]]; then
+		echo "Error : download 404"
+		return 1
+	fi
 
-# install packets
-bash "$workdir/modules/pkg_installer.sh"
+	return 0
+}
 
-# dotfiles
-    # creating .config if needed
-if [[ ! -d "$dotconf" ]]; then
-    sudo -u $user mkdir $dotconf
-fi
+function getPackageLists() {
 
-    # if not empty, backup
-if [[ -n "$(find $dotconf -mindepth 1 -print -quit)" ]]; then
-    sudo -u $user mv $dotconf "$dotconf-$date"
-    sudo -u $user mkdir $dotconf
-fi
-    # clone
-echo "Cloning dotfiles"
-sudo -u $user git clone $dotfiles $dotconf >/dev/null
+	# modules
+	local packages=(
+		"https://github.com/clementdlg/KRABS/blob/dev/packages/fedora-xfce"
+		"https://github.com/clementdlg/KRABS/blob/dev/packages/flatpaks"
+	)
 
+	mkdir -p "$workdir/packages"
 
-# setup lightdm
-bash "$workdir/modules/lightdm_conf.sh" $lockscreen_bg
+	for list in "${packages[@]}"; do
+		local name=$(basename "$list")
+		local path="$workdir/modules/$name"
 
-# create awesome session
-if [[ ! -f $awesome_session ]]; then
-    echo "[Desktop Entry]
-    Name=awesome
-    Comment=Highly configurable framework window manager
-    TryExec=awesome
-    Exec=awesome
-    Type=Application" > $awesome_session 
-fi
+		downloader "$path" "$list"
+		[[ $? -ne 0 ]]; return 1
+	done
+	return 0
+}
 
-# symlinks
-if [[ -f "$home/.bashrc" ]];then
-    sudo -u $user mv $home/.bashrc{,-$date} 
-fi
+function importModules() {
+	local workdir="/tmp/krabs$date"
 
-if [[ -f "$home/.bash_profile" ]];then
-    sudo -u $user mv $home/.bash_profile{,-$date}
-fi
+	# modules
+	local modules=(
+		"https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/pkg_installer.sh"
+		"https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/lightdm_conf.sh"
+		"https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/font_installer.sh"
+	)
 
-sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
-sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
-sudo -u $user ln -s $dotconf/bash/bash_aliases $home/.bash_aliases
-sudo -u $user ln -s $dotconf/bash/bash_functions $home/.bash_functions
+	mkdir -p "$workdir/modules"
 
-# configure theme and fonts
-mkdir -p  $workdir/git_theme
+	for module in "${modules[@]}"; do
+		local name=$(basename "$module")
+		local path="$workdir/modules/$name"
 
-echo "Installing theme"
-git clone --branch master --depth 1 $gtk_theme $workdir/git_theme >/dev/null
-if [[ $? -ne 0 ]]; then
-    echo "Error: Can not clone $gtk_theme"
-    exit 1
-fi
-mv "$workdir/git_theme/themes/Skeuos-Blue-Dark" "$theme_dir"
+		downloader "$path" "$module"
+		[[ $? -ne 0 ]]; return 1
 
-# install fonts
-sudo -u $user bash "$workdir/modules/font_installer.sh" "$font"
+		source "$path"
+		if [[ $? -ne 0 ]]; then
+			echo "Error: Cannot source $path"
+			return 1
+		fi
+	done
+	return 0
+}
+main
+# user="$SUDO_USER"
+# 
+# # main paths
+# home="/home/$user"
+# PWD="$home"
+# dotconf="$home/.config"
+# theme_dir="/usr/share/themes"
+# 
+# # other paths
+# awesome_session="/usr/share/xsessions/awesome.desktop"
+# 
+# # links
+# dotfiles="https://github.com/clementdlg/dotfiles.git"
+# scripts="https://github.com/clementdlg/scripts.git"
+# lockscreen_bg="$dotconf/awesome/theme/lockscreen-bg-fhd.png"
+# gtk_theme="https://github.com/daniruiz/skeuos-gtk.git"
+# font="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/DejaVuSansMono.zip"
+# 
 
-# syncthing
-systemctl enable cockpit
-sudo -u $user systemctl --user enable syncthing.service
-
-# fw
-firewall-cmd --add-service=syncthing --permanent
-firewall-cmd --reload
-
-xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
+# # dotfiles
+    # # creating .config if needed
+# if [[ ! -d "$dotconf" ]]; then
+    # sudo -u $user mkdir $dotconf
+# fi
+# 
+    # # if not empty, backup
+# if [[ -n "$(find $dotconf -mindepth 1 -print -quit)" ]]; then
+    # sudo -u $user mv $dotconf "$dotconf-$date"
+    # sudo -u $user mkdir $dotconf
+# fi
+    # # clone
+# echo "Cloning dotfiles"
+# sudo -u $user git clone $dotfiles $dotconf >/dev/null
+# 
+# 
+# # setup lightdm
+# bash "$workdir/modules/lightdm_conf.sh" $lockscreen_bg
+# 
+# # create awesome session
+# if [[ ! -f $awesome_session ]]; then
+    # echo "[Desktop Entry]
+    # Name=awesome
+    # Comment=Highly configurable framework window manager
+    # TryExec=awesome
+    # Exec=awesome
+    # Type=Application" > $awesome_session 
+# fi
+# 
+# # symlinks
+# if [[ -f "$home/.bashrc" ]];then
+    # sudo -u $user mv $home/.bashrc{,-$date} 
+# fi
+# 
+# if [[ -f "$home/.bash_profile" ]];then
+    # sudo -u $user mv $home/.bash_profile{,-$date}
+# fi
+# 
+# sudo -u $user ln -s $dotconf/bash/bashrc $home/.bashrc
+# sudo -u $user ln -s $dotconf/bash/bash_profile $home/.bash_profile
+# sudo -u $user ln -s $dotconf/bash/bash_aliases $home/.bash_aliases
+# sudo -u $user ln -s $dotconf/bash/bash_functions $home/.bash_functions
+# 
+# # configure theme and fonts
+# mkdir -p  $workdir/git_theme
+# 
+# echo "Installing theme"
+# git clone --branch master --depth 1 $gtk_theme $workdir/git_theme >/dev/null
+# if [[ $? -ne 0 ]]; then
+    # echo "Error: Can not clone $gtk_theme"
+    # exit 1
+# fi
+# mv "$workdir/git_theme/themes/Skeuos-Blue-Dark" "$theme_dir"
+# 
+# # install fonts
+# sudo -u $user bash "$workdir/modules/font_installer.sh" "$font"
+# 
+# # syncthing
+# systemctl enable cockpit
+# sudo -u $user systemctl --user enable syncthing.service
+# 
+# # fw
+# firewall-cmd --add-service=syncthing --permanent
+# firewall-cmd --reload
+# 
+# xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 
 # missing 
 # - add user to libvirt qemu groups
-# - disable SELinux
 # - crontab (shutdown puter)
 # - dnf installonly limit 5
 # - flatpak overrides (signal, discord, brave)
@@ -135,10 +200,10 @@ xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 # - update the bash files placement (create less symlinks)
 # - 'wk' check if 
 # - run upgrade at the beginning
-# - remove xfce-appfinder, xfce4-terminal, virtualbox-guest-additions, anaconda-core, hyperv-daemons, transmission
 # - replace vlc by its flatpak
 # - replace flameshot (uses qt)
 # - replace wireshark (uses qt)
 # - no virtu, install in distrobox instead
+# sudo dnf install @xfce-desktop --exclude="initial-setup-gui,abrt-desktop,dnfdragora-updater,xfce4-screensaver,xfdesktop,xfwm4-themes,greybird-xfwm4-theme,xfwm4,xfce4-terminal,xfce4-about,xfce4-appfinder"
 
-reboot
+# reboot
