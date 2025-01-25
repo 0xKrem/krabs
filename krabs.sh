@@ -133,7 +133,7 @@ function importModules() {
 
 # wrapper function
 function asUser() {
-	sudo -u $user
+	sudo -u $user "$@"
 }
 
 function err() {
