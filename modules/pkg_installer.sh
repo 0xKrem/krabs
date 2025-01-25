@@ -38,7 +38,6 @@ function flatpakInstall() {
 	local flatpak_repo="https://dl.flathub.org/repo/flathub.flatpakrepo"
 	flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
 
-	echo "flatpak install start"
 	local packages="$1"
 	if [[ ! -f "$packages" ]]; then
 		throwError "${FUNCNAME[0]}" "File does not exist" "$packages"
@@ -52,9 +51,10 @@ function flatpakInstall() {
 		echo "Installing $pkg"
 	
 		# installing
-		flatpak install flathub --noninteractive $flatpak &>/dev/null
+		flatpak install flathub --noninteractive $flatpak
+		# silent flatpak install flathub --noninteractive $flatpak
 
-		if [[ $? -ne 0 ]];then
+		if [[ $? -ne 0 ]]; then
 			throwError "${FUNCNAME[0]}" "Failed to install" "$pkg"
 			return 1
 		fi

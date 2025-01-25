@@ -137,7 +137,7 @@ function asUser() {
 }
 
 function err() {
-	"\033[31m$1\033[0m" >&2
+	echo "\033[31m$1\033[0m" >&2
 }
 
 function silent() {
