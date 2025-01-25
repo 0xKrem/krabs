@@ -1,9 +1,9 @@
 function parallelDownload() {
 	local dnf="/etc/dnf/dnf.conf"
 
-	if ! grep 'max_parallel_downloads=20' $dnf; then
-	  if grep -E 'max_parallel_downloads=[0-9]+$' $dnf; then
-		  sed -i -E 's/max_parallel_downloads=[0-9]+$/max_parallel_downloads=20/' $dnf
+	if ! grep 'max_parallel_downloads=20' $dnf &>/dev/null; then
+	  if grep -E 'max_parallel_downloads=[0-9]+$' $dnf &>/dev/null; then
+		  sed -i -E 's/max_parallel_downloads=[0-9]+$/max_parallel_downloads=20/' $dnf &>/dev/null
 	  else
 		  echo "max_parallel_downloads=20" >> $dnf
 	  fi
@@ -39,6 +39,9 @@ function flatpakInstall() {
 	fi
 
 	while IFS= read -r pkg; do
+		if [[ -z "$pgk" || "$pkg" == "#"* ]]; then
+			continue
+		fi
 		echo "Installing $pkg"
 	
 		# installing
