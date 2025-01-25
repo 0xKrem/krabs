@@ -1,5 +1,5 @@
 # desktop
-@xfce-desktop
+@xfce-desktop --exclude="initial-setup-gui,abrt-desktop,dnfdragora-updater,xfce4-screensaver,xfdesktop,xfwm4-themes,greybird-xfwm4-theme,xfwm4,xfce4-terminal,xfce4-about,xfce4-appfinder"
 awesome
 picom
 lightdm

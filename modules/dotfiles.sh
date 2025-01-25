@@ -27,7 +27,6 @@ function mergeDotfiles() {
 	[[ $? -ne 0 ]]; return 1
 
 	asUser silent git clone "$dotfiles" "$path"
-	# not finished
 
 	return 0
 }

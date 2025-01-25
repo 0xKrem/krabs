@@ -14,7 +14,7 @@ function parallelDownload() {
 function sysInstall() {
 	local packages="$1"
 	if [[ ! -f "$packages" ]]; then
-		echo "Error: file $packages does not exist"
+		throwError "${FUNCNAME[0]}" "File does not exist" "$packages"
 		return 1
 	fi
 
@@ -25,8 +25,8 @@ function sysInstall() {
 		echo "Installing $pkg"
 
 		dnf install $pkg -y --quiet
-		if [[ $? -ne 0 ]];then
-			echo "Error while trying to install $pkg" >&2
+		if [[ $? -ne 0 ]]; then
+			throwError "${FUNCNAME[0]}" "Failed to install" "$pkg"
 			return 1
 		fi
 	done < $packages
@@ -41,7 +41,7 @@ function flatpakInstall() {
 	echo "flatpak install start"
 	local packages="$1"
 	if [[ ! -f "$packages" ]]; then
-		echo "Error: file $packages does not exist"
+		throwError "${FUNCNAME[0]}" "File does not exist" "$packages"
 		return 1
 	fi
 
@@ -55,7 +55,7 @@ function flatpakInstall() {
 		flatpak install flathub --noninteractive $flatpak &>/dev/null
 
 		if [[ $? -ne 0 ]];then
-			echo "Error while trying to install $pkg" >&2
+			throwError "${FUNCNAME[0]}" "Failed to install" "$pkg"
 			return 1
 		fi
 	done < $packages

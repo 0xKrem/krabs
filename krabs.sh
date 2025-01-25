@@ -3,7 +3,7 @@
 function main() {
 	# check if running as root
 	if [[ $EUID -ne 0 || -z $SUDO_USER ]]; then
-		echo "Error: Run this script using sudo"
+		throwError "${FUNCNAME[0]}" "Run this script using sudo"
 		exit 1
 	fi
 
@@ -15,13 +15,13 @@ function main() {
 
 	importModules
 	if [[ $? -ne 0 ]]; then
-		echo "Error: Cannot import modules"
+		throwError "${FUNCNAME[0]}" "Cannot import modules"
 		exit 1
 	fi
 
 	getPackageLists
 	if [[ $? -ne 0 ]]; then
-		echo "Error: Cannot get package lists"
+		throwError "${FUNCNAME[0]}" "Cannot get package lists"
 		exit 1
 	fi
 	
@@ -30,25 +30,25 @@ function main() {
 
 	sysInstall "$workdir/packages/fedora-xfce"
 	if [[ $? -ne 0 ]]; then
-		echo "Error: Failed during system packages installation"
+		throwError "${FUNCNAME[0]}" "Failed during system packages installation"
 		exit 1
 	fi
 
 	flatpakInstall "$workdir/packages/flatpaks"
 	if [[ $? -ne 0 ]]; then
-		echo "Error: Failed during flatpak packages installation"
+		throwError "${FUNCNAME[0]}" "Failed during flatpak packages installation"
 		exit 1
 	fi
 
 	# dotfiles
 	if [[ $? -ne 0 ]]; then
-		echo "Error: failed to clone dotfiles"
+		throwError "${FUNCNAME[0]}" "Failed to clone dotfiles"
 		exit 1
 	fi
 
 	# lightdmMain
 	if [[ $? -ne 0 ]]; then
-		echo "Error: failed to setup lightdm"
+		throwError "${FUNCNAME[0]}" "Failed to setup lightdm"
 		exit 1
 	fi
 
@@ -57,13 +57,13 @@ function main() {
 function downloader() {
 	dir=$(dirname "$1")
 	if [[ ! -d "$dir" ]]; then
-		echo "error: $dir is not a directory"
+		throwError "${FUNCNAME[0]}" "Is a directory" "$dir"
 		return 1
 	fi
 	local file="$1"
 
 	if [[ -z "$2" ]]; then
-		echo "error: $2 is empty"
+		throwError "${FUNCNAME[0]}" "Is empty" "$2"
 		return 1
 	fi
 	local url="$2"
@@ -71,8 +71,8 @@ function downloader() {
 	echo "Downloading $name"
 	local response=$(curl -s -o "$file" -w "%{http_code}" "$url")
 
-	if [[ "$response" == "404" ]]; then
-		echo "Error : download 404"
+	if [[ "$response" -gt 399 ]]; then
+		throwError "${FUNCNAME[0]}" "Curl has returned status code" "$response"
 		return 1
 	fi
 
@@ -124,7 +124,7 @@ function importModules() {
 
 		source "$filePath"
 		if [[ $? -ne 0 ]]; then
-			echo "Error: Cannot source $filePath"
+			throwError "${FUNCNAME[0]}" "Cannot source" "$filePath"
 			return 1
 		fi
 	done
@@ -137,11 +137,22 @@ function asUser() {
 }
 
 function err() {
-	"$@" >&2
+	"\033[31m$1\033[0m" >&2
 }
 
 function silent() {
 	"$@" &>/dev/null
+}
+function throwError() {
+	# arg 1 = function name
+	# arg 2 = message
+	# arg 3 = current
+
+	if [[ -z "$1" || -z "$2" ]]; then
+		err "Misuse of throwError"
+	fi
+
+	err "KRABS : Error in $1 - $2 [$3]"
 }
 
 main
