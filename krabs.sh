@@ -84,8 +84,8 @@ function importModules() {
 	# modules
 	local modules=(
 		"$baseUrl/pkg_installer.sh"
-		"$baseUrl/lightdm_conf.sh"
-		"$baseUrl/font_installer.sh"
+		# "$baseUrl/lightdm_conf.sh"
+		# "$baseUrl/font_installer.sh"
 	)
 
 	mkdir -p "$workdir/modules"
