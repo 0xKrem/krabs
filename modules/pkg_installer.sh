@@ -23,7 +23,8 @@ function sysInstall() {
 			continue
 		fi
 		echo "Installing $pkg"
-		# dnf install $pkg -y --quiet
+
+		dnf install $pkg -y --quiet
 		if [[ $? -ne 0 ]];then
 			echo "Error while trying to install $pkg" >&2
 			return 1
@@ -35,7 +36,7 @@ function sysInstall() {
 function flatpakInstall() {
 	# flatpaks
 	local flatpak_repo="https://dl.flathub.org/repo/flathub.flatpakrepo"
-	# flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
+	flatpak remote-add --if-not-exists flathub $flatpak_repo &>/dev/null
 
 	echo "flatpak install start"
 	local packages="$1"
@@ -51,7 +52,7 @@ function flatpakInstall() {
 		echo "Installing $pkg"
 	
 		# installing
-		# flatpak install flathub --noninteractive $flatpak &>/dev/null
+		flatpak install flathub --noninteractive $flatpak &>/dev/null
 
 		if [[ $? -ne 0 ]];then
 			echo "Error while trying to install $pkg" >&2

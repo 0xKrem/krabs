@@ -27,19 +27,26 @@ function main() {
 	
 	# install packets
 	parallelDownload
-	# sysInstall "$workdir/packages/fedora-xfce"
+
+	sysInstall "$workdir/packages/fedora-xfce"
 	if [[ $? -ne 0 ]]; then
 		echo "Error: Failed during system packages installation"
 		exit 1
 	fi
 
-	# flatpakInstall "$workdir/packages/flatpaks"
+	flatpakInstall "$workdir/packages/flatpaks"
 	if [[ $? -ne 0 ]]; then
 		echo "Error: Failed during flatpak packages installation"
 		exit 1
 	fi
 
-	lightdmMain
+	# dotfiles
+	if [[ $? -ne 0 ]]; then
+		echo "Error: failed to clone dotfiles"
+		exit 1
+	fi
+
+	# lightdmMain
 	if [[ $? -ne 0 ]]; then
 		echo "Error: failed to setup lightdm"
 		exit 1
@@ -101,6 +108,7 @@ function importModules() {
 	local modules=(
 		"$baseUrl/pkg_installer.sh"
 		"$baseUrl/lightdm_conf.sh"
+		"$baseUrl/dotfiles.sh"
 		# "$baseUrl/font_installer.sh"
 	)
 
@@ -122,9 +130,21 @@ function importModules() {
 	done
 	return 0
 }
+
+# wrapper function
+function asUser() {
+	sudo -u $user
+}
+
+function err() {
+	"$@" >&2
+}
+
+function silent() {
+	"$@" &>/dev/null
+}
+
 main
-# user="$SUDO_USER"
-# 
 # # main paths
 # home="/home/$user"
 # PWD="$home"

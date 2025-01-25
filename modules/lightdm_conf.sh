@@ -2,6 +2,10 @@
 
 function lightdmMain() {
 	checkArgs "$@"
+	if [[ $? -ne 0 ]]; then
+		echo "Error : Invalid argument"
+		return 1
+	fi
 
 	local img="$1"
 	local img_name="$(basename $img)"
@@ -58,6 +62,7 @@ function checkArgs() {
 		echo "Error : .$ext file is invalid"
 		return 1
 	fi
+	return 0
 }
 
 function fInstall() {
