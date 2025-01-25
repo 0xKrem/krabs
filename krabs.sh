@@ -58,10 +58,11 @@ function downloader() {
 
 function getPackageLists() {
 
+	local baseUrl="https://raw.githubusercontent.com/clementdlg/KRABS/refs/heads/dev/packages"
 	# modules
 	local packages=(
-		"https://github.com/clementdlg/KRABS/blob/dev/packages/fedora-xfce"
-		"https://github.com/clementdlg/KRABS/blob/dev/packages/flatpaks"
+		"$baseUrl/fedora-xfce"
+		"$baseUrl/flatpaks"
 	)
 
 	mkdir -p "$workdir/packages"
@@ -79,11 +80,12 @@ function getPackageLists() {
 function importModules() {
 	local workdir="/tmp/krabs$date"
 
+	local baseUrl="https://raw.githubusercontent.com/clementdlg/KRABS/refs/heads/dev/modules"
 	# modules
 	local modules=(
-		"https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/pkg_installer.sh"
-		"https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/lightdm_conf.sh"
-		"https://raw.githubusercontent.com/clementdlg/KRABS/main/modules/font_installer.sh"
+		"$baseUrl/pkg_installer.sh"
+		"$baseUrl/lightdm_conf.sh"
+		"$baseUrl/font_installer.sh"
 	)
 
 	mkdir -p "$workdir/modules"
