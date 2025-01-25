@@ -33,11 +33,12 @@ function main() {
 }
 
 function downloader() {
-	if [[ ! -d "$1" ]]; then
-		echo "error: $1 is not a directory"
+	dir=$(dirname "$1")
+	if [[ ! -d "$dir" ]]; then
+		echo "error: $dir is not a directory"
 		return 1
 	fi
-	local path="$1"
+	local file="$1"
 
 	if [[ -z "$2" ]]; then
 		echo "error: $2 is empty"
@@ -45,7 +46,7 @@ function downloader() {
 	fi
 	local url="$2"
 
-	local response=$(curl -s -o "$path" -w "%{http_code}" "$url")
+	local response=$(curl -s -o "$file" -w "%{http_code}" "$url")
 
 	if [[ "$response" == "404" ]]; then
 		echo "Error : download 404"
@@ -67,9 +68,9 @@ function getPackageLists() {
 
 	for list in "${packages[@]}"; do
 		local name=$(basename "$list")
-		local path="$workdir/modules/$name"
+		local filePath="$workdir/modules/$name"
 
-		downloader "$path" "$list"
+		downloader "$filePath" "$list"
 		[[ $? -ne 0 ]]; return 1
 	done
 	return 0
@@ -89,14 +90,14 @@ function importModules() {
 
 	for module in "${modules[@]}"; do
 		local name=$(basename "$module")
-		local path="$workdir/modules/$name"
+		local filePath="$workdir/modules/$name"
 
-		downloader "$path" "$module"
+		downloader "$filePath" "$module"
 		[[ $? -ne 0 ]]; return 1
 
-		source "$path"
+		source "$filePath"
 		if [[ $? -ne 0 ]]; then
-			echo "Error: Cannot source $path"
+			echo "Error: Cannot source $filePath"
 			return 1
 		fi
 	done
