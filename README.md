@@ -17,7 +17,7 @@
 - Once you are logged in and you have network connection, run this command
 
 ```
-curl -s https://raw.githubusercontent.com/clementdlg/KRABS/dev/krabs.sh | sudo bash
+curl -s https://raw.githubusercontent.com/clementdlg/KRABS/refs/heads/dev/krabs.sh | sudo bash
 ```
 
 # Major Components
