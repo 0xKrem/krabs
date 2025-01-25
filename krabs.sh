@@ -46,6 +46,7 @@ function downloader() {
 	fi
 	local url="$2"
 
+	echo "Downloading $name"
 	local response=$(curl -s -o "$file" -w "%{http_code}" "$url")
 
 	if [[ "$response" == "404" ]]; then
@@ -53,6 +54,7 @@ function downloader() {
 		return 1
 	fi
 
+	echo "Download success"
 	return 0
 }
 
