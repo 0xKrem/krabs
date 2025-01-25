@@ -42,29 +42,24 @@ packages=(
     "firefox"
     "flatpak"
     "syncthing"
-    "vlc"
     "timeshift"
-    "flameshot"
     "thunar"
     "NetworkManager"
     "network-manager-applet"
     "blueman"
-    "wireshark"
 	"atril"
 
     # virtu
-	"cockpit"
-	"cockpit-machines"
-    "libvirt-client-qemu"
-    "libvirt-daemon-qemu"
-    "virt-viewer"
+	# "virt-manager"
+ #    "libvirt-client-qemu"
+ #    "libvirt-daemon-qemu"
+ #    "virt-viewer"
 
     # other
     "default-fonts-core-emoji"
     "epapirus-icon-theme"
     "xfce4-genmon-plugin"
     "telnet"
-    "zenity"
 )
 
  for pkg in "${packages[@]}"; do
@@ -93,7 +88,6 @@ flatpaks=(
     "org.kde.ark"
     "org.libreoffice.LibreOffice"
     "org.qbittorrent.qBittorrent"
-    "org.mozilla.Thunderbird"
     "org.remmina.Remmina"
 )
 

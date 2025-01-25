@@ -134,5 +134,15 @@ xfconf-query -c xfce4-screensaver -p /saver/fullscreen-inhibit -s true
 # - dont just clone dotfiles repo, check every files / folder and copy them to .config while renaming old files when conflict
 # - refactor script with a functions, text files for packages and create wrapper functions for simple tasks
 # - update the bash files placement (create less symlinks)
+# - git clone scripts
+# - 'wk' check if 
+# - run upgrade at the beginning
+# - re-add virt-manager and remove cockpit
+# - remove xfce-appfinder, xfce4-terminal, virtualbox-guest-additions, anaconda-core
+# - replace vlc by its flatpak
+# - remove flameshot (uses qt)
+# - remove wireshark (uses qt)
+# - remove hyperv-daemons 
+# - no virtu, install in distrobox instead
 
 reboot
