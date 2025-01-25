@@ -1,0 +1,53 @@
+# desktop
+@xfce-desktop
+awesome
+picom
+lightdm
+lightdm-gtk
+rofi
+
+# dev
+neovim
+vim
+git
+tmux
+distrobox
+podman
+cargo
+npm
+
+# cli utils
+htop
+btop
+wget
+unzip
+tar
+ripgrep
+eza
+bat
+fzf
+zoxide
+
+# apps
+alacritty
+firefox
+flatpak
+syncthing
+timeshift
+thunar
+NetworkManager
+network-manager-applet
+blueman
+atril
+
+# virtu
+# virt-manager
+#    libvirt-client-qemu
+#    libvirt-daemon-qemu
+#    virt-viewer
+
+# other
+default-fonts-core-emoji
+epapirus-icon-theme
+xfce4-genmon-plugin
+telnet

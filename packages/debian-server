@@ -1,0 +1,18 @@
+# basics
+tmux
+vim
+tree
+
+# internet
+curl
+wget
+git
+
+# monitoring
+htop
+lnav
+
+# networking
+iperf3
+net-tools
+iftop

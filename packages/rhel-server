@@ -1,0 +1,17 @@
+# basics
+tmux
+vim
+terminus-fonts-console
+
+# internet
+curl
+wget
+git
+
+# monitoring
+htop
+lnav
+
+# networking
+iperf3
+net-tools
