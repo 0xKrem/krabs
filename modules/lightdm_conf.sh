@@ -1,87 +1,93 @@
 #!/bin/bash
-# set -ex
 
-# help
-if [[ ! -n "$1" ]]; then
-    echo "This script is part of KRem's Auto Bootstrap Script (KRABS)
+function lightdmMain() {
+	checkArgs "$@"
 
-Its purpose is to configure display manager
-You must run it as root and pass a file path of the background image as an argument
-    Accepted extensions are .jpg and .png
-    Example : ./script '/path/to/image.png'"
-    exit 0
-fi
+	local img="$1"
+	local img_name="$(basename $img)"
+	local img_path="/usr/share/backgrounds/$img_name"
 
-# check if running as root
-if [[ $EUID -ne 0 || ! -n $SUDO_USER ]]; then
-    echo "Error: Run this script using sudo"
-    exit 1
-fi
-user="$SUDO_USER"
+	fInstall "lightdm"
+	[[ $? -ne 0 ]] && return 1
 
-# arg checking
-if [[ ! -f "$1" ]]; then
-    echo "Error : '$1' invalid image path'"
-    exit 1
-fi
+	fInstall "lightdm-gtk-greeter"
+	[[ $? -ne 0 ]] && return 1
 
-# extension checking
-ext=$(echo "$1" | sed 's/.*\.//')
-if [[ $ext != "png" && $ext != "jpg" ]] ;then
-    echo "Error : .$ext file is invalid"
-    exit 1
-fi
+	fInstall "epapirus-icon-theme"
+	[[ $? -ne 0 ]] && return 1
 
-img="$1"
-img_name="$(echo $img | sed 's/.*\///')"
-img_path="/usr/share/backgrounds/$img_name"
+	# configure services
+	systemctl enable lightdm.service >/dev/null
+	[[ $? -ne 0 ]] && return 1
 
-# check lightdm is installed
-if ! which lightdm ; then
-    echo "Installing lightdm"
-    dnf install lightdm -y >/dev/null
-fi
+	systemctl set-default graphical.target >/dev/null
+	[[ $? -ne 0 ]] && return 1
 
-if ! which lightdm-gtk-greeter ; then
-    echo "Installing lightdm-gtk-greeter"
-    dnf install lightdm-gtk-greeter -y >/dev/null
-fi
+	# background image
+	cp "$img" /usr/share/backgrounds/
+	chmod 644 "/usr/share/backgrounds/$img_name"
 
-# check if papirus is installed
-if ! rpm -q 'epapirus-icon-theme' ; then
-    echo "Installing  rpm -q 'epapirus-icon-theme' >/dev/null"
-    dnf install epapirus-icon-theme -y >/dev/null
-fi
+	writeConfigs
+	[[ $? -ne 0 ]] && return 1
 
-# configure services
-echo "Configuring service and target"
-systemctl enable lightdm.service >/dev/null
-systemctl set-default graphical.target >/dev/null
+	# rename override background
+	if [[ -f "/usr/share/backgrounds/xfce/xfce-shapes.svg" ]]; then
+		mv /usr/share/backgrounds/xfce/{,_}xfce-shapes.svg
+	fi
 
-# background image
-cp "$img" /usr/share/backgrounds/
-chmod 644 "/usr/share/backgrounds/$img_name"
+	return 0
+}
 
-# config files
-echo "setting up .conf files"
+function checkArgs() {
+	# help
+	if [[ ! -n "$1" ]]; then
+		echo "Error : you must provide an image
+		Example : ./script '/path/to/image.png'"
+		return 1
+	fi
 
-echo "[Seat:*]
-autologin-user=$user
-autologin-session=xfce
-greeter-session=lightdm-gtk-greeter" > /etc/lightdm/lightdm.conf
+	# arg checking
+	if [[ ! -f "$1" ]]; then
+		echo "Error : '$1' invalid image path'"
+		return 1
+	fi
 
-echo "[greeter]
-theme-name = Adwaita-dark
-icon-theme-name = ePapirus-Dark
-font-name = Sans 12
-background = $img_path
-clock-format = %H:%M
-indicators = ~host;~spacer;~clock;~spacer;~layout;~separator;~session;~power" > /etc/lightdm/lightdm-gtk-greeter.conf
+	# extension checking
+	local ext=$(echo "$1" | sed 's/.*\.//')
+	if [[ $ext != "png" && $ext != "jpg" ]] ;then
+		echo "Error : .$ext file is invalid"
+		return 1
+	fi
+}
 
+function fInstall() {
+	if [[ -z "$1" ]]; then
+		return 1
+	fi
 
-# rename override background
-if [[ -f "/usr/share/backgrounds/xfce/xfce-shapes.svg" ]]; then
-    mv /usr/share/backgrounds/xfce/{,_}xfce-shapes.svg
-fi
+	if ! rpm -q "$1" &>/dev/null; then
+		echo "Installing $1"
+		dnf install --quiet -assumeyes "$1"
+		return $?
+	fi
 
-echo "Lightdm is successfully configured"
+	echo "$1 is already installed"
+	return 0
+}
+
+function writeConfigs() {
+	echo "[Seat:*]
+	autologin-user=$user
+	autologin-session=xfce
+	greeter-session=lightdm-gtk-greeter" > /etc/lightdm/lightdm.conf
+	[[ $? -ne 0 ]] && return 1
+
+	echo "[greeter]
+	theme-name = Adwaita-dark
+	icon-theme-name = ePapirus-Dark
+	font-name = Sans 12
+	background = $img_path
+	clock-format = %H:%M
+	indicators = ~host;~spacer;~clock;~spacer;~layout;~separator;~session;~power" > /etc/lightdm/lightdm-gtk-greeter.conf
+	return $?
+}

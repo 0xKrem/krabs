@@ -8,6 +8,7 @@ function parallelDownload() {
 		  echo "max_parallel_downloads=20" >> $dnf
 	  fi
 	fi
+	return 0
 }
 
 function sysInstall() {
@@ -28,6 +29,7 @@ function sysInstall() {
 			return 1
 		fi
 	done < $packages
+	return 0
 }
 
 function flatpakInstall() {
@@ -56,4 +58,5 @@ function flatpakInstall() {
 			return 1
 		fi
 	done < $packages
+	return 0
 }

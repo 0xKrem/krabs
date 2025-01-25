@@ -7,8 +7,9 @@ function main() {
 		exit 1
 	fi
 
-	date=$(date +%H%M%S%d)
+	local date=$(date +%H%M%S%d)
 	local workdir="/tmp/krabs-$date"
+	local user="$SUDO_USER"
 
 	# function prerequisits that checks the distro and internet connection
 
@@ -24,11 +25,25 @@ function main() {
 		exit 1
 	fi
 	
-
 	# install packets
 	parallelDownload
-	sysInstall "$workdir/packages/fedora-xfce"
-	flatpakInstall "$workdir/packages/flatpaks"
+	# sysInstall "$workdir/packages/fedora-xfce"
+	if [[ $? -ne 0 ]]; then
+		echo "Error: Failed during system packages installation"
+		exit 1
+	fi
+
+	# flatpakInstall "$workdir/packages/flatpaks"
+	if [[ $? -ne 0 ]]; then
+		echo "Error: Failed during flatpak packages installation"
+		exit 1
+	fi
+
+	lightdmMain
+	if [[ $? -ne 0 ]]; then
+		echo "Error: failed to setup lightdm"
+		exit 1
+	fi
 
 }
 
@@ -85,7 +100,7 @@ function importModules() {
 	# modules
 	local modules=(
 		"$baseUrl/pkg_installer.sh"
-		# "$baseUrl/lightdm_conf.sh"
+		"$baseUrl/lightdm_conf.sh"
 		# "$baseUrl/font_installer.sh"
 	)
 
