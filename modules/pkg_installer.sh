@@ -18,7 +18,7 @@ function sysInstall() {
 	fi
 
 	while IFS= read -r pkg; do
-		if [[ -z "$pgk" || "$pkg" =~ ^# ]]; then
+		if [[ -z "$pkg" || "$pkg" =~ ^# ]]; then
 			continue
 		fi
 		echo "Installing $pkg"
